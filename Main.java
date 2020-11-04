@@ -32,13 +32,16 @@ public class Main {
       Comparator<Person> byLName = Comparator.comparing(Person::getLastName);
       Collections.sort(personList, byLName);
 
+      List<String> firstNames = new ArrayList<String>();
+      for (Person prs : personList) {
+        firstNames.add(prs.getFirstName());
+      }
       // find first name duplicate count
-      final long duplicates = personList.stream().filter(firstName -> Collections.frequency(personList, firstName.getFirstName()) > 1).distinct()
+      final long duplicates = firstNames.stream().filter(name -> Collections.frequency(firstNames, name) > 1).distinct()
           .count();
-      System.out.println("duplicates: "+duplicates);
 
       // find avg age
-      final double average =  personList.stream().mapToDouble(age -> age.getAge()).average().getAsDouble();
+      final double average = personList.stream().mapToDouble(age -> age.getAge()).average().getAsDouble();
 
       List<String> dataForCSV = Output.writeToFile(duplicates, average, personList);
       Files.write(Paths.get("output.csv"), dataForCSV, Charset.defaultCharset());
